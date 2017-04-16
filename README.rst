@@ -43,3 +43,27 @@ You can pass parameters like,
 .. code::
 
     $ curl 'https://0.0.0.0:8080/graphs/raster?shape=4,5&spacing=2.,1.'
+
+
+------
+Docker
+------
+
+To build a new docker image that will be a landlab-rest server,
+
+.. code::
+
+    docker build . -t landlab-rest
+
+
+After building, run the server,
+
+.. code::
+
+    docker run -it -p 80:80 landlab-rest
+
+Once running, you can then send requests to the server. For example,
+
+.. code::
+
+    $ curl https://0.0.0.0/graphs/raster
