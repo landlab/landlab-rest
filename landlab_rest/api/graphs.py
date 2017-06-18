@@ -46,6 +46,8 @@ def grid_as_dict(grid):
     dataset = xr.Dataset({
         'y_of_node': xr.DataArray(grid.y_of_node, dims=('node', )),
         'x_of_node': xr.DataArray(grid.x_of_node, dims=('node', )),
+        'y_of_link': xr.DataArray(grid.y_of_link, dims=('link', )),
+        'x_of_link': xr.DataArray(grid.x_of_link, dims=('link', )),
         'nodes_at_link': xr.DataArray(nodes_at_link,
                                       dims=('link', 'nodes_per_link', )),
         'nodes_at_patch': xr.DataArray(grid.nodes_at_patch,
