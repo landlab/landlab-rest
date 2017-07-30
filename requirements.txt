@@ -2,3 +2,4 @@ flask
 cherrypy
 landlab
 xarray
+flask-cors

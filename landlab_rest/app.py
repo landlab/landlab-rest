@@ -1,6 +1,7 @@
 import importlib
 
 from flask import Flask, jsonify, url_for, Blueprint
+from flask_cors import CORS, cross_origin
 
 
 def register_blueprints(app):
@@ -20,12 +21,13 @@ def register_blueprints(app):
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
+    CORS(app)
 
     @app.route('/')
     def site_map():
         COLLECTIONS = ['graphs', ]
 
-        map ={'@type': 'api','href': url_for('.site_map')}
+        map = {'@type': 'api', 'href': url_for('.site_map')}
         links = []
         for rel in COLLECTIONS:
             href = url_for('.'.join([rel, 'show']))

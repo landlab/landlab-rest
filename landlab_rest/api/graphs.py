@@ -42,6 +42,8 @@ def to_resource(grid, href=None):
 def grid_as_dict(grid):
     nodes_at_link = np.vstack((grid.node_at_link_tail,
                                grid.node_at_link_head)).T
+    # corners_at_link = np.vstack((grid.corner_at_face_tail,
+    #                            grid.corner_at_face_head)).T
 
     dataset = xr.Dataset({
         'y_of_node': xr.DataArray(grid.y_of_node, dims=('node', )),
@@ -50,6 +52,10 @@ def grid_as_dict(grid):
                                       dims=('link', 'nodes_per_link', )),
         'nodes_at_patch': xr.DataArray(grid.nodes_at_patch,
                                        dims=('patch', 'nodes_per_patch', )),
+        # 'y_of_corner': xr.DataArray(grid.y_of_corner, dims=('corner', )),
+        # 'x_of_corner': xr.DataArray(grid.x_of_corner, dims=('corner', )),
+        # 'corners_at_face': xr.DataArray(grid.corners_at_face,
+        #                                dims=('face', 'corners_per_face', )),
     })
 
     return dataset.to_dict()
