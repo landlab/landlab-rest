@@ -6,6 +6,7 @@ import xarray as xr
 import numpy as np
 
 import landlab
+from landlab.graph import DualUniformRectilinearGraph
 
 
 graphs_page = Blueprint('graphs', __name__)
@@ -86,8 +87,7 @@ def raster():
     spacing = [float(n) for n in args['spacing'].split(',')]
 
     grid = landlab.RasterModelGrid(shape, spacing=spacing)
-    graph = landlab.graph.DualUniformRectilinearGraph(shape,
-                                                      spacing=spacing)
+    graph = DualUniformRectilinearGraph(shape, spacing=spacing)
     return as_resource(to_resource(
         grid, graph,
         href='/graph/raster?{params}'.format(params=urllib.urlencode(args))))
