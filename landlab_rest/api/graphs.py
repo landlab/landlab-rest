@@ -6,7 +6,8 @@ import xarray as xr
 import numpy as np
 
 import landlab
-from landlab.graph import DualUniformRectilinearGraph
+from landlab.graph import (DualUniformRectilinearGraph, DualHexGraph,
+                           DualRadialGraph)
 
 
 graphs_page = Blueprint('graphs', __name__)
@@ -88,6 +89,7 @@ def raster():
 
     grid = landlab.RasterModelGrid(shape, spacing=spacing)
     graph = DualUniformRectilinearGraph(shape, spacing=spacing)
+
     return as_resource(to_resource(
         grid, graph,
         href='/graph/raster?{params}'.format(params=urllib.urlencode(args))))
@@ -102,21 +104,25 @@ def hex():
     spacing = float(args['spacing'])
 
     grid = landlab.HexModelGrid(*shape, dx=spacing)
+    graph = DualHexGraph(shape, spacing=spacing, node_layout='hex')
 
     return as_resource(to_resource(
-        grid,
+        grid, graph,
         href='/graph/hex?{params}'.format(params=urllib.urlencode(args))))
 
 
 @graphs_page.route('/radial')
 def radial():
-    args = dict(shape=request.args.get('shape', '4,4'))
+    #args = dict(shape=request.args.get('shape', '4,4'))
+    args = dict(shape=request.args.get('shape', '1,1'))
 
     shape = [int(n) for n in args['shape'].split(',')]
-    n_shells, dr = shape[0], 2. * np.pi / shape[1]
+    #n_shells, dr = shape[0], 2. * np.pi / shape[1]
+    n_shells, dr = shape[0], shape[1]
 
     grid = landlab.RadialModelGrid(n_shells, dr)
+    graph = DualRadialGraph(shape=(shape[0], 6), spacing=dr)
 
     return as_resource(to_resource(
-        grid,
+        grid, graph,
         href='/graph/radial?{params}'.format(params=urllib.urlencode(args))))

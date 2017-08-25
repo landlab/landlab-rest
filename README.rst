@@ -21,6 +21,8 @@ Start the server,
 
     $ python ./server.py
 
+(note: you might need to use: sudo python ./server.py)
+
 Look at the line containing `Serving on` to see what host and port the
 server is running on. Alternatively, you can use the `--host` and `--port`
 options to specify a specific host and port (`--help` for help).
