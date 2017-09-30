@@ -21,7 +21,8 @@ Start the server,
 
     $ python ./server.py
 
-(note: you might need to use: sudo python ./server.py)
+(note: depending on the port, you might need to use:
+`sudo python ./server.py`)
 
 Look at the line containing `Serving on` to see what host and port the
 server is running on. Alternatively, you can use the `--host` and `--port`
@@ -32,19 +33,19 @@ to get a `RasterModelGrid`,
 
 .. code::
 
-    $ curl https://0.0.0.0:8080/graphs/raster
+    $ curl http://0.0.0.0:8080/graphs/raster
 
 For a list of supported graphs
 
 .. code::
 
-    $ curl https://0.0.0.0:8080/graphs/
+    $ curl http://0.0.0.0:8080/graphs/
 
 You can pass parameters like,
 
 .. code::
 
-    $ curl 'https://0.0.0.0:8080/graphs/raster?shape=4,5&spacing=2.,1.'
+    $ curl 'http://0.0.0.0:8080/graphs/raster?shape=4,5&spacing=2.,1.'
 
 
 ------
@@ -68,4 +69,4 @@ Once running, you can then send requests to the server. For example,
 
 .. code::
 
-    $ curl https://0.0.0.0/graphs/raster
+    $ curl http://0.0.0.0/graphs/raster
