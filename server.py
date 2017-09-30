@@ -12,7 +12,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--port', type=int, default=80,
+    parser.add_argument('-p', '--port', type=int, default=8080,
                         help='port to run on')
     parser.add_argument('--host', type=str, default='0.0.0.0',
                         help='host IP address')
