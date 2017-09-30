@@ -5,12 +5,12 @@ from flask import Blueprint, jsonify, request, Response
 import xarray as xr
 import numpy as np
 
-import landlab
 from landlab.graph import (DualUniformRectilinearGraph, DualHexGraph,
                            DualRadialGraph)
 
 
 graphs_page = Blueprint('graphs', __name__)
+
 
 def as_resource(resp):
     return Response(json.dumps(resp, sort_keys=True, indent=2,
@@ -33,34 +33,37 @@ def jsonify_collection(items):
                     mimetype='application/x-collection+json; charset=utf-8')
 
 
-def to_resource(grid, graph, href=None):
+def to_resource(graph, href=None):
     return {
         '_type': 'graph',
         'href': href,
-        'graph': grid_as_dict(grid, graph),
+        'graph': graph_as_dict(graph),
     }
 
 
-def grid_as_dict(grid, graph):
-    nodes_at_link = np.vstack((grid.node_at_link_tail,
-                               grid.node_at_link_head)).T
-    corners_at_face = np.vstack((graph.corner_at_face_tail,
-                                 graph.corner_at_face_head)).T
+def graph_as_dict(graph):
+    nodes_at_link = graph.nodes_at_link
+    corners_at_face = graph.corners_at_face
+
+    x_of_link = np.mean(graph.x_of_node[nodes_at_link], axis=1)
+    y_of_link = np.mean(graph.y_of_node[nodes_at_link], axis=1)
+    x_of_face = np.mean(graph.x_of_corner[corners_at_face], axis=1)
+    y_of_face = np.mean(graph.y_of_corner[corners_at_face], axis=1)
 
     dataset = xr.Dataset({
-        'y_of_node': xr.DataArray(grid.y_of_node, dims=('node', )),
-        'x_of_node': xr.DataArray(grid.x_of_node, dims=('node', )),
+        'y_of_node': xr.DataArray(graph.y_of_node, dims=('node', )),
+        'x_of_node': xr.DataArray(graph.x_of_node, dims=('node', )),
         'y_of_corner': xr.DataArray(graph.y_of_corner, dims=('corner', )),
         'x_of_corner': xr.DataArray(graph.x_of_corner, dims=('corner', )),
-        'y_of_link': xr.DataArray(grid.y_of_link, dims=('link', )),
-        'x_of_link': xr.DataArray(grid.x_of_link, dims=('link', )),
-        'y_of_face': xr.DataArray(grid.y_of_face, dims=('face', )),
-        'x_of_face': xr.DataArray(grid.x_of_face, dims=('face', )),
+        'y_of_link': xr.DataArray(y_of_link, dims=('link', )),
+        'x_of_link': xr.DataArray(x_of_link, dims=('link', )),
+        'y_of_face': xr.DataArray(y_of_face, dims=('face', )),
+        'x_of_face': xr.DataArray(x_of_face, dims=('face', )),
         'nodes_at_link': xr.DataArray(nodes_at_link,
                                       dims=('link', 'nodes_per_link', )),
         'corners_at_face': xr.DataArray(corners_at_face,
                                       dims=('face', 'corners_per_face', )),
-        'nodes_at_patch': xr.DataArray(grid.nodes_at_patch,
+        'nodes_at_patch': xr.DataArray(graph.nodes_at_patch,
                                        dims=('patch', 'nodes_per_patch', )),
         'corners_at_cell': xr.DataArray(graph.corners_at_cell,
                                         dims=('cell', 'corners_per_cell', )),
@@ -87,11 +90,10 @@ def raster():
     shape = [int(n) for n in args['shape'].split(',')]
     spacing = [float(n) for n in args['spacing'].split(',')]
 
-    grid = landlab.RasterModelGrid(shape, spacing=spacing)
     graph = DualUniformRectilinearGraph(shape, spacing=spacing)
 
     return as_resource(to_resource(
-        grid, graph,
+        graph,
         href='/graph/raster?{params}'.format(params=urllib.urlencode(args))))
 
 
@@ -103,11 +105,10 @@ def hex():
     shape = [int(n) for n in args['shape'].split(',')]
     spacing = float(args['spacing'])
 
-    grid = landlab.HexModelGrid(*shape, dx=spacing)
     graph = DualHexGraph(shape, spacing=spacing, node_layout='hex')
 
     return as_resource(to_resource(
-        grid, graph,
+        graph,
         href='/graph/hex?{params}'.format(params=urllib.urlencode(args))))
 
 
@@ -120,9 +121,8 @@ def radial():
     #n_shells, dr = shape[0], 2. * np.pi / shape[1]
     n_shells, dr = shape[0], shape[1]
 
-    grid = landlab.RadialModelGrid(n_shells, dr)
     graph = DualRadialGraph(shape=(shape[0], 6), spacing=dr)
 
     return as_resource(to_resource(
-        grid, graph,
+        graph,
         href='/graph/radial?{params}'.format(params=urllib.urlencode(args))))
