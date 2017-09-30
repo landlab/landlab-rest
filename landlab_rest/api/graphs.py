@@ -114,14 +114,17 @@ def hex():
 
 @graphs_page.route('/radial')
 def radial():
-    #args = dict(shape=request.args.get('shape', '4,4'))
-    args = dict(shape=request.args.get('shape', '1,1'))
+    args = dict(shape=request.args.get('shape', '4,6'),
+                spacing=request.args.get('spacing', '1.'))
+    # args = dict(shape=request.args.get('shape', '1,1'))
 
     shape = [int(n) for n in args['shape'].split(',')]
-    #n_shells, dr = shape[0], 2. * np.pi / shape[1]
-    n_shells, dr = shape[0], shape[1]
+    spacing = float(args['spacing'])
+    # n_shells, dr = shape[0], 2. * np.pi / shape[1]
+    #n_shells, dr = shape[0], shape[1]
 
-    graph = DualRadialGraph(shape=(shape[0], 6), spacing=dr)
+    graph = DualRadialGraph(shape=shape, spacing=spacing)
+    # graph = DualRadialGraph(shape=(shape[0], 6), spacing=dr)
 
     return as_resource(to_resource(
         graph,
