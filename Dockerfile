@@ -19,7 +19,7 @@ RUN apt-get update
 RUN apt-get install -y tar git curl vim dialog net-tools build-essential lsb-release
 
 # Install Python and Basic Python Tools
-RUN curl https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh > miniconda.sh
+RUN curl https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh > miniconda.sh
 RUN /bin/bash ./miniconda.sh -b -f -p /usr/local/python
 RUN export PATH=/usr/local/python/bin:$PATH
 RUN /usr/local/python/bin/conda config --add channels conda-forge
