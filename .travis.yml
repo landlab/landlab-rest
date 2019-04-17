@@ -17,7 +17,7 @@ jobs:
     os: linux
     install:
     - conda env create --file docs/source/environment.yml
-    - conda activate landlag_rest_docs
+    - conda activate landlab_rest_docs
     script:
     - sphinx-apidoc --force -o docs landlab_rest *tests
     - make -C docs clean html
