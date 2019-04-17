@@ -52,6 +52,7 @@ before_install:
 - conda create -n test_env python=$CONDA_ENV
 - source activate test_env
 install:
+- conda install landlab -c conda-forge
 - pip install . -r requirements.txt
 script:
 - pytest --cov=landlab_rest --cov-report=xml:$(pwd)/coverage.xml -vvv
