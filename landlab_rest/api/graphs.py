@@ -76,7 +76,7 @@ def raster():
     grid = landlab.RasterModelGrid(shape, spacing=spacing)
     return as_resource(to_resource(
         grid,
-        href='/graph/raster?{params}'.format(params=urllib.urlencode(args))))
+        href='/graph/raster?{params}'.format(params=urllib.parse.urlencode(args))))
 
 
 @graphs_page.route('/hex')
@@ -91,7 +91,7 @@ def hex():
 
     return as_resource(to_resource(
         grid,
-        href='/graph/hex?{params}'.format(params=urllib.urlencode(args))))
+        href='/graph/hex?{params}'.format(params=urllib.parse.urlencode(args))))
 
 
 @graphs_page.route('/radial')
@@ -105,4 +105,4 @@ def radial():
 
     return as_resource(to_resource(
         grid,
-        href='/graph/radial?{params}'.format(params=urllib.urlencode(args))))
+        href='/graph/radial?{params}'.format(params=urllib.parse.urlencode(args))))
