@@ -22,10 +22,10 @@ setup(
         "Programming Language :: Python :: Implementation :: CPython",
         "Topic :: Scientific/Engineering :: Physics",
     ],
-    install_requires=["flask", "cherrypy", "landlab", "xarray"],
+    install_requires=["flask", "cherrypy", "click", "landlab", "xarray"],
     packages=find_packages(),
     cmdclass=versioneer.get_cmdclass(),
     entry_points={
-        "console_scripts": ["start-landlab-sketchbook=landlab_rest.start:main"]
+        "console_scripts": ["start-landlab-sketchbook=landlab_rest.cli:main"]
     },
 )
