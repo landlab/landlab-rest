@@ -1,0 +1,59 @@
+language: generic
+os:
+- linux
+- osx
+env:
+  matrix:
+  - CONDA_ENV=3.7
+  - CONDA_ENV=3.6
+sudo: false
+jobs:
+  include:
+  - stage: lint
+    os: linux
+    script:
+    - make lint
+  - stage: docs
+    os: linux
+    install:
+    - conda env create --file docs/source/environment.yml
+    - conda activate landlab_rest_docs
+    script:
+    - sphinx-apidoc --force -o docs landlab_rest *tests
+    - make -C docs clean html
+  - stage: deploy
+    if: tag =~ v.*$
+    script: skip
+    os: linux
+    deploy:
+      on:
+        all_branches: true
+      provider: pypi
+      user: mcflugen
+      password:
+        secure: AjCxRjpvtut7XtmtJ3TQHWAkYqJT7RbUcVoQc2ENuRb2Y4eR5BvX2OEfl6SQroMhhTGtO2M6Flk731kJ5SvUSDUZSduQvlJXICuK9qPQjsUeggNpg9HTTCS+TxUVPlIrYor+xsTyIVec5+7EcExcp3RBc0enyhQZnhu80sFxZlpbAt4BA9/i1RigREPZ2W8ZK9aR5sJ73PyY9pfU8tSp5bGdQD24K2tMVgMmdKBmZV5/xavXQTStY6sqJP9y1puiWqBlFBFaNwQhx5DmDb/+7O5RT4RRl/WD4FUTei5jS+GPQ/hboWsVNOkxmTAuq/Rlsg2a1YXiFKndZ867xh/bNnRMTZbyjy/k7SNd2ePDtmgdaL2jEftthalIg2cOdSv7mjyjuYp/e63GU/DxJZ/wRgt6FYp7KQ2uChZu/DPAvZVhCAjbflsGzO85jhWRHvHkHgoaqjfNdVspSf1lMRdXVeFB7fYAvBOzsdx4Sceu4yteGgBTv2H8NEX8f47T+TqhWtnOuDPI/XGF2fxDvl1SFjF9AB3RrRgGQl9Vaf8ATIcTWrWssDKdHOzwmJJeJmxUCYQVgFLkvHNp3gnliWMcMRs2N/JgIQiX0kGN6Kq48CP01m48VXC+KspkOWtuLcwHSV2dJBKUeBYOd95XN7gnAkbsB6m9vbMBpJraR0DjGKY=
+before_install:
+- |
+  if [[ $TRAVIS_OS_NAME == "osx" ]]; then
+    brew remove --force $(brew list)
+    brew cleanup -s
+    rm -rf $(brew --cache)
+  fi
+- |
+  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    curl https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh > $HOME/miniconda.sh
+  else
+    curl https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh > $HOME/miniconda.sh
+  fi
+- bash $HOME/miniconda.sh -b -p $HOME/anaconda
+- export PATH="$HOME/anaconda/bin:$PATH"
+- hash -r
+- conda config --set always_yes yes --set changeps1 no
+- conda create -n test_env python=$CONDA_ENV
+- source activate test_env
+install:
+- conda install landlab -c conda-forge
+- pip install . -r requirements.txt
+script:
+- pytest --cov=landlab_rest --cov-report=xml:$(pwd)/coverage.xml -vvv
+after_success: coveralls

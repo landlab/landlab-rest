@@ -1,0 +1,2 @@
+include versioneer.py
+include landlab_rest/_version.py
