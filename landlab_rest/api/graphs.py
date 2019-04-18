@@ -67,9 +67,9 @@ def raster():
         to_resource(
             grid,
             href=urllib.parse.urlunsplit(
-                ("", "", "/graph/raster", urllib.parse.urlencode(args), "")
+                ("", "", "/graphs/raster", urllib.parse.urlencode(args), "")
             ),
-            repr_="DualUniformRectilinear({shape}, spacing={spacing}, origin={origin})".format(
+            repr_="DualUniformRectilinearGraph({shape}, spacing={spacing}, origin={origin})".format(
                 shape=repr(shape), spacing=repr(spacing), origin=repr(origin)
             ),
         )
@@ -102,7 +102,7 @@ def hex():
         to_resource(
             grid,
             href=urllib.parse.urlunsplit(
-                ("", "", "/graph/hex", urllib.parse.urlencode(args), "")
+                ("", "", "/graphs/hex", urllib.parse.urlencode(args), "")
             ),
             repr_="DualHexGraph({shape}, spacing={spacing}, origin={origin}, orientation={orientation}, node_layout={node_layout})".format(
                 shape=repr(shape),
@@ -133,7 +133,7 @@ def radial():
         to_resource(
             grid,
             href=urllib.parse.urlunsplit(
-                ("", "", "/graph/radial", urllib.parse.urlencode(args), "")
+                ("", "", "/graphs/radial", urllib.parse.urlencode(args), "")
             ),
             repr_="DualRadialGraph({shape}, spacing={spacing}, origin={origin})".format(
                 shape=repr(shape), spacing=repr(spacing), origin=repr(origin)
