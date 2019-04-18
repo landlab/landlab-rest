@@ -1,9 +1,8 @@
 import urllib
 
-import numpy as np
 import pytest
 import xarray as xr
-from numpy.testing import assert_array_almost_equal, assert_array_equal
+from numpy.testing import assert_array_almost_equal
 
 
 def test_hex_default(client):

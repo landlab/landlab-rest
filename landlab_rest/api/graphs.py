@@ -2,8 +2,6 @@ import json
 import urllib
 
 import landlab
-import numpy as np
-import xarray as xr
 from flask import Blueprint, Response, jsonify, request
 
 graphs_page = Blueprint("graphs", __name__)
