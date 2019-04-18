@@ -33,30 +33,12 @@ def jsonify_collection(items):
     )
 
 
-def to_resource(grid, href=None):
-    return {"_type": "graph", "href": href, "graph": grid_as_dict(grid)}
+def to_resource(grid, href=None, repr_=None):
+    return {"_type": "graph", "href": href, "graph": grid_as_dict(grid), "repr": repr_}
 
 
 def grid_as_dict(grid):
-    nodes_at_link = np.vstack((grid.node_at_link_tail, grid.node_at_link_head)).T
-
-    dataset = xr.Dataset(
-        {
-            "y_of_node": xr.DataArray(grid.y_of_node, dims=("node",)),
-            "x_of_node": xr.DataArray(grid.x_of_node, dims=("node",)),
-            "nodes_at_link": xr.DataArray(
-                nodes_at_link, dims=("link", "nodes_per_link")
-            ),
-            "nodes_at_patch": xr.DataArray(
-                grid.nodes_at_patch, dims=("patch", "nodes_per_patch")
-            ),
-        }
-    )
-
-    return dataset.to_dict()
-
-    # return as_resource(dataset.to_dict())
-    # return jsonify(dataset.to_dict())
+    return grid.ds.to_dict()
 
 
 @graphs_page.route("/")
@@ -70,17 +52,26 @@ def show():
 def raster():
     args = dict(
         shape=request.args.get("shape", "3,3"),
-        spacing=request.args.get("spacing", "1.,1."),
+        spacing=request.args.get("spacing", "1.0,1.0"),
+        origin=request.args.get("origin", "0.0,0.0"),
     )
 
-    shape = [int(n) for n in args["shape"].split(",")]
-    spacing = [float(n) for n in args["spacing"].split(",")]
+    shape = tuple(int(n) for n in args["shape"].split(","))
+    spacing = tuple(float(n) for n in args["spacing"].split(","))
+    origin = tuple(float(n) for n in args["origin"].split(","))
 
-    grid = landlab.RasterModelGrid(shape, spacing=spacing)
+    grid = landlab.graph.DualUniformRectilinearGraph(
+        shape, spacing=spacing, origin=origin
+    )
     return as_resource(
         to_resource(
             grid,
-            href="/graph/raster?{params}".format(params=urllib.parse.urlencode(args)),
+            href=urllib.parse.urlunsplit(
+                ("", "", "/graph/raster", urllib.parse.urlencode(args), "")
+            ),
+            repr_="DualUniformRectilinear({shape}, spacing={spacing}, origin={origin})".format(
+                shape=repr(shape), spacing=repr(spacing), origin=repr(origin)
+            ),
         )
     )
 
@@ -89,33 +80,62 @@ def raster():
 def hex():
     args = dict(
         shape=request.args.get("shape", "4,4"),
-        spacing=request.args.get("spacing", "1."),
+        spacing=request.args.get("spacing", "1.0"),
+        origin=request.args.get("origin", "0.0,0.0"),
+        orientation=request.args.get("orientation", "horizontal"),
+        node_layout=request.args.get("node_layout", "rect"),
     )
 
-    shape = [int(n) for n in args["shape"].split(",")]
+    shape = tuple(int(n) for n in args["shape"].split(","))
     spacing = float(args["spacing"])
+    origin = tuple(float(n) for n in args["origin"].split(","))
 
-    grid = landlab.HexModelGrid(*shape, dx=spacing)
+    grid = landlab.graph.DualHexGraph(
+        shape,
+        spacing=spacing,
+        origin=origin,
+        orientation=args["orientation"],
+        node_layout=args["node_layout"],
+    )
 
     return as_resource(
         to_resource(
-            grid, href="/graph/hex?{params}".format(params=urllib.parse.urlencode(args))
+            grid,
+            href=urllib.parse.urlunsplit(
+                ("", "", "/graph/hex", urllib.parse.urlencode(args), "")
+            ),
+            repr_="DualHexGraph({shape}, spacing={spacing}, origin={origin}, orientation={orientation}, node_layout={node_layout})".format(
+                shape=repr(shape),
+                spacing=repr(spacing),
+                origin=repr(origin),
+                orientation=repr(args["orientation"]),
+                node_layout=repr(args["node_layout"]),
+            ),
         )
     )
 
 
 @graphs_page.route("/radial")
 def radial():
-    args = dict(shape=request.args.get("shape", "4,4"))
+    args = dict(
+        shape=request.args.get("shape", "3,4"),
+        spacing=request.args.get("spacing", "1.0"),
+        origin=request.args.get("origin", "0.0,0.0"),
+    )
 
-    shape = [int(n) for n in args["shape"].split(",")]
-    n_shells, dr = shape[0], 2.0 * np.pi / shape[1]
+    shape = tuple(int(n) for n in args["shape"].split(","))
+    spacing = float(args["spacing"])
+    origin = tuple(float(n) for n in args["origin"].split(","))
 
-    grid = landlab.RadialModelGrid(n_shells, dr)
+    grid = landlab.graph.DualRadialGraph(shape, spacing=spacing, origin=origin)
 
     return as_resource(
         to_resource(
             grid,
-            href="/graph/radial?{params}".format(params=urllib.parse.urlencode(args)),
+            href=urllib.parse.urlunsplit(
+                ("", "", "/graph/radial", urllib.parse.urlencode(args), "")
+            ),
+            repr_="DualRadialGraph({shape}, spacing={spacing}, origin={origin})".format(
+                shape=repr(shape), spacing=repr(spacing), origin=repr(origin)),
         )
     )
