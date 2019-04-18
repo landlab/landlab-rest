@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 import xarray as xr
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_array_equal, assert_array_almost_equal
 
 from landlab_rest import create_app
 
@@ -31,18 +31,31 @@ def test_graph_data(client, graph_type):
     )
 
     assert set(graph.dims) == {
+        "cell",
+        "corner",
+        "face",
         "link",
+        "max_cell_faces",
+        "max_patch_links",
         "node",
-        "nodes_per_link",
-        "nodes_per_patch",
         "patch",
+        "Two",
     }
     assert set(graph.variables) == {
+        "corner",
+        "corners_at_face",
+        "dual",
+        "faces_at_cell",
+        "links_at_patch",
+        "mesh",
+        "node",
+        "node_at_cell",
+        "nodes_at_face",
         "nodes_at_link",
+        "x_of_corner",
         "x_of_node",
+        "y_of_corner",
         "y_of_node",
-        "nodes_at_patch",
-        "nodes_at_link",
     }
 
 
@@ -50,11 +63,15 @@ def test_raster_default(client):
     graph = xr.Dataset.from_dict(client.get("/graphs/raster").get_json()["graph"])
 
     assert graph.dims == {
+        "cell": 1,
+        "corner": 4,
+        "face": 4,
         "link": 12,
         "node": 9,
-        "nodes_per_link": 2,
-        "nodes_per_patch": 4,
         "patch": 4,
+        "max_cell_faces": 4,
+        "max_patch_links": 4,
+        "Two": 2,
     }
 
     assert_array_equal(
@@ -76,9 +93,42 @@ def test_raster_default(client):
     )
     assert_array_equal(graph.x_of_node, [0.0, 1.0, 2.0, 0.0, 1.0, 2.0, 0.0, 1.0, 2.0])
     assert_array_equal(graph.y_of_node, [0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0])
+    assert_array_equal(graph.x_of_corner, [0.5, 1.5, 0.5, 1.5])
+    assert_array_equal(graph.y_of_corner, [0.5, 0.5, 1.5, 1.5])
     assert_array_equal(
-        graph.nodes_at_patch, [[4, 3, 0, 1], [5, 4, 1, 2], [7, 6, 3, 4], [8, 7, 4, 5]]
+        graph.links_at_patch, [[3, 5, 2, 0], [4, 6, 3, 1], [8, 10, 7, 5], [9, 11, 8, 6]]
     )
+    assert_array_equal(graph.corners_at_face, [[0, 1], [0, 2], [1, 3], [2, 3]])
+
+
+def test_raster_default_shape(client):
+    graph_1 = xr.Dataset.from_dict(client.get("/graphs/raster").get_json()["graph"])
+    graph_2 = xr.Dataset.from_dict(
+        client.get("/graphs/raster?shape=3,3").get_json()["graph"]
+    )
+
+    assert_array_almost_equal(graph_1.x_of_node, graph_2.x_of_node)
+    assert_array_almost_equal(graph_1.y_of_node, graph_2.y_of_node)
+
+
+def test_raster_default_spacing(client):
+    graph_1 = xr.Dataset.from_dict(client.get("/graphs/raster").get_json()["graph"])
+    graph_2 = xr.Dataset.from_dict(
+        client.get("/graphs/raster?spacing=1").get_json()["graph"]
+    )
+
+    assert_array_almost_equal(graph_1.x_of_node, graph_2.x_of_node)
+    assert_array_almost_equal(graph_1.y_of_node, graph_2.y_of_node)
+
+
+def test_raster_default_origin(client):
+    graph_1 = xr.Dataset.from_dict(client.get("/graphs/raster").get_json()["graph"])
+    graph_2 = xr.Dataset.from_dict(
+        client.get("/graphs/raster?origin=0.0,0.0").get_json()["graph"]
+    )
+
+    assert_array_almost_equal(graph_1.x_of_node, graph_2.x_of_node)
+    assert_array_almost_equal(graph_1.y_of_node, graph_2.y_of_node)
 
 
 @pytest.mark.parametrize("n_cols", (4, 8, 16, 32))
@@ -97,5 +147,17 @@ def test_raster_spacing(client, dx, dy):
 
     expected_x, expected_y = np.meshgrid([0.0, 1.0, 2.0], [0.0, 1.0, 2.0])
 
-    assert_array_equal(graph.x_of_node, expected_x.reshape((-1,)) * dx)
-    assert_array_equal(graph.y_of_node, expected_y.reshape((-1,)) * dy)
+    assert_array_almost_equal(graph.x_of_node, expected_x.reshape((-1,)) * dx)
+    assert_array_almost_equal(graph.y_of_node, expected_y.reshape((-1,)) * dy)
+
+
+@pytest.mark.parametrize("y0", (-1.0, 1.0, 2.0, 4.0))
+@pytest.mark.parametrize("x0", (-1.0, 1.0, 2.0, 4.0))
+def test_raster_origin(client, x0, y0):
+    url = "/graphs/raster?origin={0},{1}".format(y0, x0)
+    graph = xr.Dataset.from_dict(client.get(url).get_json()["graph"])
+
+    expected_x, expected_y = np.meshgrid([0.0, 1.0, 2.0], [0.0, 1.0, 2.0])
+
+    assert_array_almost_equal(graph.x_of_node, expected_x.reshape((-1,)) + x0)
+    assert_array_almost_equal(graph.y_of_node, expected_y.reshape((-1,)) + y0)
