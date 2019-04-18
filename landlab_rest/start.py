@@ -1,21 +1,16 @@
+import cherrypy
+
 from landlab_rest import create_app
 
-
 app = create_app()
-
-
-# Import CherryPy
-import cherrypy
 
 
 def main():
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--port', type=int, default=80,
-                        help='port to run on')
-    parser.add_argument('--host', type=str, default='0.0.0.0',
-                        help='host IP address')
+    parser.add_argument("-p", "--port", type=int, default=80, help="port to run on")
+    parser.add_argument("--host", type=str, default="0.0.0.0", help="host IP address")
 
     args = parser.parse_args()
 
@@ -46,7 +41,3 @@ def main():
 
     cherrypy.engine.start()
     cherrypy.engine.block()
-
-
-if __name__ == '__main__':
-    main()
