@@ -3,16 +3,6 @@ import pytest
 import xarray as xr
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 
-from landlab_rest import create_app
-
-app = create_app()
-
-
-@pytest.fixture(scope="module")
-def client():
-    with app.test_client() as c:
-        yield c
-
 
 @pytest.mark.parametrize("graph_type", ("hex", "radial", "raster"))
 def test_graph_status(client, graph_type):
