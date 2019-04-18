@@ -25,5 +25,7 @@ setup(
     install_requires=["flask", "cherrypy", "landlab", "xarray"],
     packages=find_packages(),
     cmdclass=versioneer.get_cmdclass(),
-    entry_points={"console_scripts": ["start-landlab-sketchbook=landlab_rest.run:main"]},
+    entry_points={
+        "console_scripts": ["start-landlab-sketchbook=landlab_rest.start:main"]
+    },
 )
