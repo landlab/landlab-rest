@@ -5,16 +5,6 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal
 
 
 @pytest.mark.parametrize("graph_type", ("hex", "radial", "raster"))
-def test_graph_status(client, graph_type):
-    response = client.get("/graphs/{0}".format(graph_type))
-    assert response.status_code == 200
-
-    data = response.get_json()
-    assert data["_type"] == "graph"
-    assert "graph" in data
-
-
-@pytest.mark.parametrize("graph_type", ("hex", "radial", "raster"))
 def test_graph_data(client, graph_type):
     graph = xr.Dataset.from_dict(
         client.get("/graphs/{0}".format(graph_type)).get_json()["graph"]
