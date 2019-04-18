@@ -1,3 +1,5 @@
+import urllib
+
 import numpy as np
 import pytest
 import xarray as xr
@@ -50,14 +52,46 @@ def test_hex_default_origin(client):
     assert_array_almost_equal(graph_1.y_of_node, graph_2.y_of_node)
 
 
+@pytest.mark.parametrize("node_layout", ("rect", "hex"))
+@pytest.mark.parametrize("orientation", ("horizontal", "vertical"))
 @pytest.mark.parametrize("y0", (-1.0, 1.0, 2.0, 4.0))
 @pytest.mark.parametrize("x0", (-1.0, 1.0, 2.0, 4.0))
-def test_hex_origin(client, x0, y0):
-    url = "/graphs/hex?origin={0},{1}".format(y0, x0)
-    graph = xr.Dataset.from_dict(client.get(url).get_json()["graph"])
-    centered = xr.Dataset.from_dict(
-        client.get("/graphs/hex?origin=0.0,0.0").get_json()["graph"]
+def test_hex_origin(client, x0, y0, orientation, node_layout):
+    query = dict(
+        origin="{0},{1}".format(y0, x0),
+        orientation=orientation,
+        node_layout=node_layout,
     )
+    url = urllib.parse.urlunsplit(
+        ("", "", "/graphs/hex", urllib.parse.urlencode(query), "")
+    )
+    graph = xr.Dataset.from_dict(client.get(url).get_json()["graph"])
+
+    query["origin"] = "0.0,0.0"
+    url = urllib.parse.urlunsplit(
+        ("", "", "/graphs/hex", urllib.parse.urlencode(query), "")
+    )
+    centered = xr.Dataset.from_dict(client.get(url).get_json()["graph"])
 
     assert_array_almost_equal(graph.x_of_node, centered.x_of_node + x0)
     assert_array_almost_equal(graph.y_of_node, centered.y_of_node + y0)
+
+
+def test_hex_default_orientation(client):
+    graph_1 = xr.Dataset.from_dict(client.get("/graphs/hex").get_json()["graph"])
+    graph_2 = xr.Dataset.from_dict(
+        client.get("/graphs/hex?orientation=horizontal").get_json()["graph"]
+    )
+
+    assert_array_almost_equal(graph_1.x_of_node, graph_2.x_of_node)
+    assert_array_almost_equal(graph_1.y_of_node, graph_2.y_of_node)
+
+
+def test_hex_default_node_layout(client):
+    graph_1 = xr.Dataset.from_dict(client.get("/graphs/hex").get_json()["graph"])
+    graph_2 = xr.Dataset.from_dict(
+        client.get("/graphs/hex?node_layout=rect").get_json()["graph"]
+    )
+
+    assert_array_almost_equal(graph_1.x_of_node, graph_2.x_of_node)
+    assert_array_almost_equal(graph_1.y_of_node, graph_2.y_of_node)
