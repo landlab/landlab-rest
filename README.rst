@@ -9,17 +9,18 @@ A RESTful interface to landlab graphs.
 Quickstart
 ----------
 
-Use `conda` to install the necessary requirements,
+Use `conda` to install the necessary requirements and `landlab_rest`,
 
 .. code::
 
-    $ conda install --file=requirements.txt -c conda-forge -c landlab
+    $ conda install --file=requirements.txt -c conda-forge
+    $ pip install .
 
 Start the server,
 
 .. code::
 
-    $ python ./server.py
+    $ start-landlab-sketchbook
 
 Look at the line containing `Serving on` to see what host and port the
 server is running on. Alternatively, you can use the `--host` and `--port`
