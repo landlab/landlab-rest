@@ -20,7 +20,7 @@ Start the server,
 
 .. code::
 
-    $ start-landlab-sketchbook
+    $ start-sketchbook
 
 Look at the line containing `Serving on` to see what host and port the
 server is running on. Alternatively, you can use the `--host` and `--port`

@@ -5,14 +5,7 @@ from landlab_rest import create_app
 app = create_app()
 
 
-def main():
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--port", type=int, default=80, help="port to run on")
-    parser.add_argument("--host", type=str, default="0.0.0.0", help="host IP address")
-
-    args = parser.parse_args()
+def start(host, port):
 
     # Mount the application
     cherrypy.tree.graft(app, "/")
@@ -24,8 +17,8 @@ def main():
     server = cherrypy._cpserver.Server()
 
     # Configure the server object
-    server.socket_host = args.host
-    server.socket_port = args.port
+    server.socket_host = host
+    server.socket_port = port
     server.thread_pool = 30
 
     # For SSL Support
