@@ -1,4 +1,5 @@
 import pytest
+
 from landlab_rest import create_app
 
 app = create_app()

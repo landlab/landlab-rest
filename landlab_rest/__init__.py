@@ -1,5 +1,4 @@
 from ._version import get_versions
-
 from .app import create_app
 
 __all__ = ["create_app"]

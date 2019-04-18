@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 import xarray as xr
-from numpy.testing import assert_array_equal, assert_array_almost_equal
+from numpy.testing import assert_array_almost_equal, assert_array_equal
 
 
 @pytest.mark.parametrize("graph_type", ("hex", "radial", "raster"))

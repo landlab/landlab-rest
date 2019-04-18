@@ -136,6 +136,7 @@ def radial():
                 ("", "", "/graph/radial", urllib.parse.urlencode(args), "")
             ),
             repr_="DualRadialGraph({shape}, spacing={spacing}, origin={origin})".format(
-                shape=repr(shape), spacing=repr(spacing), origin=repr(origin)),
+                shape=repr(shape), spacing=repr(spacing), origin=repr(origin)
+            ),
         )
     )
