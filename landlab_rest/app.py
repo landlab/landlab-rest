@@ -1,7 +1,7 @@
 import importlib
 
 from flask import Blueprint, Flask, jsonify, url_for
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 
 
 def register_blueprints(app):
