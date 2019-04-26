@@ -1,5 +1,7 @@
 import importlib
 
+from flask_cors import CORS
+
 from flask import Blueprint, Flask, jsonify, url_for
 
 
@@ -19,6 +21,7 @@ def register_blueprints(app):
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
+    CORS(app)
 
     @app.route("/")
     def site_map():
