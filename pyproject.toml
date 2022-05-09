@@ -52,13 +52,14 @@ changelog = "https://github.com/landlab/landlab-rest/blob/develop/CHANGES.rst"
 [project.optional-dependencies]
 dev = [
   "black",
+  "coveralls",
   "flake8",
   "flake8-bugbear",
   "isort",
   "pre-commit",
   "pytest",
   "pytest-cov",
-  "coveralls",
+  "towncrier",
   "zest.releaser[recommended]",
 ]
 
