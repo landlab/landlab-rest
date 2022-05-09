@@ -36,6 +36,14 @@ def to_resource(grid, href=None, repr_=None):
 
 
 def grid_as_dict(grid):
+    grid.ds.update(
+        {
+            "x_of_corner": (("corner",), grid.x_of_corner),
+            "y_of_corner": (("corner",), grid.y_of_corner),
+            "faces_at_cell": (("cell", "max_cell_faces"), grid.faces_at_cell),
+            "corners_at_face": (("face", "Two"), grid.corners_at_face),
+        }
+    )
     return grid.ds.to_dict()
 
 
@@ -91,9 +99,10 @@ def hex():
     grid = landlab.graph.DualHexGraph(
         shape,
         spacing=spacing,
-        origin=origin,
+        xy_of_lower_left=origin,
         orientation=args["orientation"],
         node_layout=args["node_layout"],
+        sort=True,
     )
 
     return as_resource(
@@ -102,7 +111,7 @@ def hex():
             href=urllib.parse.urlunsplit(
                 ("", "", "/graphs/hex", urllib.parse.urlencode(args), "")
             ),
-            repr_="DualHexGraph({shape}, spacing={spacing}, origin={origin}, orientation={orientation}, node_layout={node_layout})".format(
+            repr_="DualHexGraph({shape}, spacing={spacing}, xy_of_lower_left={origin}, orientation={orientation}, node_layout={node_layout})".format(
                 shape=repr(shape),
                 spacing=repr(spacing),
                 origin=repr(origin),
@@ -125,7 +134,9 @@ def radial():
     spacing = float(args["spacing"])
     origin = tuple(float(n) for n in args["origin"].split(","))
 
-    grid = landlab.graph.DualRadialGraph(shape, spacing=spacing, origin=origin)
+    grid = landlab.graph.DualRadialGraph(
+        shape, spacing=spacing, xy_of_center=origin, sort=True
+    )
 
     return as_resource(
         to_resource(
@@ -133,7 +144,7 @@ def radial():
             href=urllib.parse.urlunsplit(
                 ("", "", "/graphs/radial", urllib.parse.urlencode(args), "")
             ),
-            repr_="DualRadialGraph({shape}, spacing={spacing}, origin={origin})".format(
+            repr_="DualRadialGraph({shape}, spacing={spacing}, xy_of_center={origin})".format(
                 shape=repr(shape), spacing=repr(spacing), origin=repr(origin)
             ),
         )
