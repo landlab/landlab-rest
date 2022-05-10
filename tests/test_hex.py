@@ -10,8 +10,8 @@ def test_hex_default(client):
 
     assert graph.dims == {
         "cell": 4,
-        "corner": 16,
-        "face": 19,
+        "corner": 18,
+        "face": 21,
         "link": 33,
         "node": 16,
         "patch": 18,

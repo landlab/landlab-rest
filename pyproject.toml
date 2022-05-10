@@ -1,0 +1,128 @@
+[build-system]
+requires = ["cython", "numpy", "setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "landlab-rest"
+description = "A RESTful interface to landlab graphs."
+authors = [
+  {email = "mcflugen@gmail.com"},
+  {name = "The landlab team"}
+]
+maintainers = [
+  {email = "mcflugen@gmail.com"},
+  {name = "The landlab team"}
+]
+keywords = [
+  "bmi",
+  "component modeling",
+  "earth science",
+  "gridding engine",
+  "model coupling",
+  "numerical modeling",
+]
+license = {file = "LICENSE.rst"}
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Topic :: Scientific/Engineering :: Physics",  
+]
+requires-python = ">=3.8"
+dependencies = [
+    "cherrypy",
+    "click",
+    "flask",
+    "flask-cors",
+    "landlab >= 2",
+]
+dynamic = ["readme", "version"]
+
+[project.urls]
+homepage = "https://github.com/landlab"
+documentation = "https://github.com/landlab/landlab-rest#readme"
+repository = "https://github.com/landlab/landlab-rest"
+changelog = "https://github.com/landlab/landlab-rest/blob/develop/CHANGES.rst"
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "coveralls",
+  "flake8",
+  "flake8-bugbear",
+  "isort",
+  "pre-commit",
+  "pytest",
+  "pytest-cov",
+  "towncrier",
+  "zest.releaser[recommended]",
+]
+
+[project.scripts]
+start-sketchbook = "landlab_rest.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.rst", "AUTHORS.rst", "CHANGES.rst"]}
+version = {attr = "landlab_rest._version.__version__"}
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["landlab_rest", "tests"]
+norecursedirs = [".*", "*.egg*", "build", "dist", "examples"]
+addopts = """
+  --ignore setup.py
+  --tb native
+  --strict
+  --durations 16
+  --doctest-modules
+  -vvv
+"""
+doctest_optionflags = [
+  "NORMALIZE_WHITESPACE",
+  "IGNORE_EXCEPTION_DETAIL",
+  "ALLOW_UNICODE"
+]
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+line_length = 88
+
+[tool.towncrier]
+directory = "news"
+package = "landlab_rest"
+filename = "CHANGES.rst"
+single_file = true
+underlines = "-`^"
+issue_format = "`#{issue} <https://github.com/landlab/landlab-rest/issues/{issue}>`_"
+title_format = "{version} ({project_date})"
+
+[[tool.towncrier.type]]
+directory = "feature"
+name = "New Features"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "bugfix"
+name = "Bug Fixes"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "docs"
+name = "Documentation Enhancements"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "misc"
+name = "Other Changes and Additions"
+showcontent = true
