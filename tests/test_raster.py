@@ -24,7 +24,6 @@ def test_graph_data(client, graph_type):
     assert set(graph.variables) == {
         "corner",
         "corners_at_face",
-        "dual",
         "faces_at_cell",
         "links_at_patch",
         "mesh",
