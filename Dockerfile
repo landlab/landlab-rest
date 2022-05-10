@@ -1,35 +1,25 @@
-############################################################
-# Dockerfile to build Python WSGI Application Containers
-# Based on Ubuntu
-############################################################
+FROM mambaorg/micromamba:0.23.0
 
-# Set the base image to Ubuntu
-FROM ubuntu
+ARG MAMBA_USER=mambauser
+ARG MAMBA_USER_ID=1000
+ARG MAMBA_USER_GID=1000
+ENV MAMBA_USER=$MAMBA_USER
+
+USER root
+
+COPY --chown=$MAMBA_USER:$MAMBA_USER env.yaml /tmp/env.yaml
+RUN micromamba install -y -f /tmp/env.yaml && micromamba clean --all --yes
+ARG MAMBA_DOCKERFILE_ACTIVATE=1
 
 # File Author / Maintainer
 MAINTAINER Eric Hutton
 
-# Add the application resources URL
-RUN echo "deb http://archive.ubuntu.com/ubuntu/ $(. /etc/lsb-release && printf '%s' $DISTRIB_CODENAME) main universe" >> /etc/apt/sources.list
+# RUN export PATH=/usr/local/python/bin:$PATH
 
-# Update the sources list
-RUN apt-get update
-
-# Install basic applications
-RUN apt-get install -y tar git curl vim dialog net-tools build-essential lsb-release
-
-# Install Python and Basic Python Tools
-RUN curl https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh > miniconda.sh
-RUN /bin/bash ./miniconda.sh -b -f -p /usr/local/python
-RUN export PATH=/usr/local/python/bin:$PATH
-RUN /usr/local/python/bin/conda config --add channels conda-forge
-RUN /usr/local/python/bin/conda config --add channels landlab
-
-# Copy the application folder inside the container
+# install landlab-rest package
 ADD . /landlab-rest
-
-# Get pip to download and install requirements:
-RUN /usr/local/python/bin/conda install --yes --file=/landlab-rest/requirements.txt
+RUN pip install /landlab-rest
+RUN cd /landlab-rest/grid-sketchbook-master
 
 # Expose ports
 EXPOSE 80
@@ -39,5 +29,4 @@ WORKDIR /landlab-rest
 
 # Set the default command to execute
 # when creating a new container
-# i.e. using CherryPy to serve the application
-CMD /usr/local/python/bin/python server.py
+CMD start-sketchbook
