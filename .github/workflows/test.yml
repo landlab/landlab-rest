@@ -41,7 +41,6 @@ jobs:
       - name: Install dependencies
         run: |
           conda install mamba -c conda-forge
-          ./requirements.py > requirements.txt
           mamba install --file=requirements.txt
 
       - name: Build and install package

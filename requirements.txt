@@ -1,0 +1,7 @@
+# Requirements extracted from pyproject.toml
+# [project.dependencies]
+cherrypy
+click
+flask
+flask-cors
+landlab >= 2
