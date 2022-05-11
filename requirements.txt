@@ -1,5 +1,7 @@
-coveralls
-flake8
-pytest>=3.6
-pytest-cov
+# Requirements extracted from pyproject.toml
+# [project.dependencies]
+cherrypy
+click
+flask
 flask-cors
+landlab >= 2

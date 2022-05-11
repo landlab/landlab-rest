@@ -22,7 +22,7 @@ def start(host, port, ssl_cert, ssl_key, ssl_chain):
 
     # For SSL Support
     if ssl_cert is not None and ssl_key is not None:
-        server.ssl_module = 'builtin'
+        server.ssl_module = "builtin"
         server.ssl_certificate = ssl_cert
         server.ssl_private_key = ssl_key
         server.ssl_certificate_chain = ssl_chain
