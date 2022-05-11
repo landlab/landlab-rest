@@ -53,7 +53,7 @@ jobs:
       - name: Test
         run: |
           python -c 'import landlab_rest; print(landlab_rest.__version__)'
-          pytest --cov=landlab_rest --cov-report=xml:$(pwd)/coverage.xml -vvv -n auto
+          pytest --cov=landlab_rest --cov-report=xml:$(pwd)/coverage.xml -vvv
 
       - name: Coveralls
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
