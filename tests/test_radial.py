@@ -59,8 +59,8 @@ def test_radial_spacing(client, spacing):
     )
 
     assert_array_almost_equal(
-        np.sqrt(graph.x_of_node ** 2 + graph.y_of_node ** 2),
-        np.sqrt(unit.x_of_node ** 2 + unit.y_of_node ** 2) * spacing,
+        np.sqrt(graph.x_of_node**2 + graph.y_of_node**2),
+        np.sqrt(unit.x_of_node**2 + unit.y_of_node**2) * spacing,
         5,
     )
 
