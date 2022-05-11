@@ -1,5 +1,0 @@
-coveralls
-flake8
-pytest>=3.6
-pytest-cov
-flask-cors
