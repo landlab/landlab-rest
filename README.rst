@@ -1,11 +1,17 @@
-============
+.. image:: https://github.com/landlab/landlab-rest/actions/workflows/test.yml/badge.svg
+    :target: https://github.com/landlab/landlab-rest/actions/workflows/test.yml
+
+.. image:: https://github.com/landlab/landlab-rest/actions/workflows/flake8.yml/badge.svg
+    :target: https://github.com/landlab/landlab-rest/actions/workflows/flake8.yml
+
+.. image:: https://github.com/landlab/landlab-rest/actions/workflows/black.yml/badge.svg
+    :target: https://github.com/landlab/landlab-rest/actions/workflows/black.yml
+
 landlab REST
 ============
 
 A RESTful interface to landlab graphs.
 
-
-----------
 Quickstart
 ----------
 
@@ -46,7 +52,6 @@ You can pass parameters like,
     $ curl 'https://0.0.0.0:8080/graphs/raster?shape=4,5&spacing=2.,1.'
 
 
-------
 Docker
 ------
 
