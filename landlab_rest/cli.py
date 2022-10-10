@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import click
 
 from .start import start
@@ -14,5 +13,5 @@ from .start import start
 @click.option("--silent", is_flag=True, help="only emit messages on error")
 def main(host, port, ssl_cert, ssl_key, ssl_chain, silent):
     if not silent:
-        click.secho("🚀 launching landlab sketchbook on {0}:{1}".format(host, port))
+        click.secho(f"🚀 launching landlab sketchbook on {host}:{port}")
     start(host, port, ssl_cert, ssl_key, ssl_chain)

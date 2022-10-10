@@ -9,7 +9,7 @@ def register_blueprints(app):
     rv = []
 
     for name in ["graphs"]:
-        m = importlib.import_module(".api.{bp}".format(bp=name), package="landlab_rest")
+        m = importlib.import_module(f".api.{name}", package="landlab_rest")
         for item in dir(m):
             item = getattr(m, item)
             if isinstance(item, Blueprint):
