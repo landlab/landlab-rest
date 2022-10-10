@@ -62,6 +62,13 @@ dev = [
   "towncrier",
   "zest.releaser[recommended]",
 ]
+docs = [
+  "sphinx>=4",
+  "furo",
+  "sphinxcontrib.towncrier",
+  "sphinx-inline-tabs",
+  "towncrier",
+]
 
 [project.scripts]
 start-sketchbook = "landlab_rest.cli:main"

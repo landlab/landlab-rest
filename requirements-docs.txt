@@ -1,0 +1,7 @@
+# Requirements extracted from pyproject.toml
+# [project.optional-dependencies] docs
+furo
+sphinx-inline-tabs
+sphinx>=4
+sphinxcontrib.towncrier
+towncrier<22.8
