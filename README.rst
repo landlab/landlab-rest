@@ -15,12 +15,18 @@ A RESTful interface to landlab graphs.
 Quickstart
 ----------
 
+.. start-install-release
+
 Use `conda` to install the necessary requirements and `landlab_rest`,
 
 .. code::
 
     $ conda install --file=requirements.txt -c conda-forge
     $ pip install .
+
+.. end-install-release
+
+.. start-running
 
 Start the server,
 
@@ -73,3 +79,5 @@ Once running, you can then send requests to the server. For example,
 .. code::
 
     $ curl https://0.0.0.0/graphs/raster
+
+.. end-running
