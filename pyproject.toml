@@ -67,6 +67,7 @@ docs = [
   "sphinx>=4",
   "furo",
   "sphinxcontrib.towncrier",
+  "sphinx-copybutton",
   "sphinx-inline-tabs",
   "towncrier",
 ]
