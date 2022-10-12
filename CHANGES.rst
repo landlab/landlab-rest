@@ -48,5 +48,3 @@ Other Changes and Additions
 - Set up continuous integration on Travis.org. (`#5 <https://github.com/landlab/landlab-rest/issues/5>`_)
 - Added unit tests. (`#5 <https://github.com/landlab/landlab-rest/issues/5>`_)
 - Added smoke tests for the command line interface, ``start-sketchbook``. (`#7 <https://github.com/landlab/landlab-rest/issues/7>`_)
-
-

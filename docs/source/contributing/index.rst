@@ -19,8 +19,7 @@ you to contribute to the project.
 .. toctree::
     :maxdepth: 1
     :hidden:
-    
+
     workflow
     developer_install
     environments
-    

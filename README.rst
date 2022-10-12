@@ -23,13 +23,13 @@ on `PyPI`_.
 1.  Install *landlab-rest* into your current environment.
 
     .. code:: bash
-    
+
         pip install landlab-rest
 
 2.  Start the server.
 
     .. code:: bash
-    
+
         start-sketchbook
 
 3.  You can now send queries to the *landlab-rest* service.

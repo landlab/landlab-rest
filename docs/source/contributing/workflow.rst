@@ -26,14 +26,14 @@ To work on this project, you need to have Python 3.8+.
 * Clone this project using git:
 
   .. code:: bash
-  
+
     git clone https://github.com/landlab/landlab-rest.git
     cd landlab-rest
 
 * Install the project's development workflow runner:
 
   .. code:: bash
-  
+
     pip install nox
 
 You're all set for working on this project.
@@ -64,7 +64,7 @@ Serve this project's documentation locally, using `sphinx-autobuild`_. This will
 the generated documentation page in your browser.
 
 The server also watches for changes made to the documentation (`docs/source`), which
-will trigger a rebuild. Once the build is completed, the server will 
+will trigger a rebuild. Once the build is completed, the server will
 reload any open pages using *livereload*.
 
 Documentation Generation

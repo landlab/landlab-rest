@@ -34,9 +34,9 @@ List graphs.
 :Status Codes:
     * 200 OK – An array of strings.
 :Examples:
-    
+
     .. code-block:: bash
-    
+
        curl 'https://0.0.0.0:8080/graphs/'
 
 GET /graphs/{name}
@@ -57,14 +57,12 @@ Get the graph structure.
 :Examples:
 
     .. code-block:: bash
-    
+
        curl 'https://0.0.0.0:8080/graphs/raster'
-    
+
     A raster grid with 4 rows and 5 columns or nodes with a columns spacing of 2.0
     and a row spacing of 1.0.
-    
+
     .. code-block:: bash
-    
+
        curl 'https://0.0.0.0:8080/graphs/raster?shape=4,5&spacing=2.,1.'
-    
-    

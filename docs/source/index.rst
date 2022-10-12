@@ -15,7 +15,7 @@ Currently available grid types include :class:`~landlab.grid.raster.RasterModelG
 .. toctree::
   :maxdepth: 1
   :hidden:
-  
+
   quickstart
   starting
   requests
@@ -24,7 +24,7 @@ Currently available grid types include :class:`~landlab.grid.raster.RasterModelG
   :caption: Development
   :maxdepth: 1
   :hidden:
-  
+
   contributing/index
   changes
   Contributors <authors>
