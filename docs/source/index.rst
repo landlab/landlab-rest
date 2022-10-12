@@ -20,6 +20,7 @@ landlab REST
   :hidden:
 
   contributing/index
+  Reference <api/index>
   changes
   Contributors <authors>
   License <license>
