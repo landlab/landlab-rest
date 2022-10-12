@@ -15,16 +15,32 @@ A RESTful interface to landlab graphs.
 Quickstart
 ----------
 
-.. start-install-release
+.. start-quickstart
 
-Use `conda` to install the necessary requirements and `landlab_rest`,
+To get started you will need to install the *landlab-rest* package, which is currently distributed
+on `PyPI`_.
 
-.. code::
+1.  Install *landlab-rest* into your current environment.
 
-    conda install --file=requirements.txt -c conda-forge
-    pip install .
+    .. code:: bash
+    
+        pip install landlab-rest
 
-.. end-install-release
+2.  Start the server.
+
+    .. code:: bash
+    
+        start-sketchbook
+
+3.  You can now send queries to the *landlab-rest* service.
+
+    .. code:: bash
+
+        curl https://0.0.0.0:8080/graphs/
+
+.. _PyPI: https://pypi.org/project/landlab-rest/
+
+.. end-quickstart
 
 .. start-running
 
