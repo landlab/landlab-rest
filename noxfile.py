@@ -42,7 +42,7 @@ def towncrier(session: nox.Session) -> None:
     session.run("towncrier", "check", "--compare-with", "origin/master")
 
 
-@nox.session(name="build-docs")
+@nox.session(name="build-docs", reuse_venv=True)
 def build_docs(session: nox.Session) -> None:
     """Build the docs."""
     session.install(".[docs]")
@@ -58,7 +58,20 @@ def build_docs(session: nox.Session) -> None:
     )
 
 
-@nox.session(name="build-requirements")
+@nox.session(name="live-docs", reuse_venv=True)
+def live_docs(session: nox.Session) -> None:
+    session.install(".[docs]")
+    session.run(
+        "sphinx-autobuild",
+        "-b",
+        "html",
+        "docs/source",
+        "docs/build/html",
+        "--open-browser",
+    )
+
+
+@nox.session(name="build-requirements", reuse_venv=True)
 def build_requirements(session: nox.Session) -> None:
     """Create requirements files from pyproject.toml."""
     session.install("tomli")
