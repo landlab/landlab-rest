@@ -1,3 +1,4 @@
+"""Define the API for /graphs/{graph}."""
 import json
 import urllib
 
@@ -8,6 +9,18 @@ graphs_page = Blueprint("graphs", __name__)
 
 
 def as_resource(resp):
+    """Convert a response to a resource.
+
+    Parameters
+    ----------
+    resp : object
+        The object to convert to a resource.
+
+    Returns
+    -------
+    :class:`~flask.Response`
+        The object as a resource.
+    """
     return Response(
         json.dumps(resp, sort_keys=True, indent=2, separators=(",", ": ")),
         mimetype="application/x-resource+json; charset=utf-8",
@@ -15,6 +28,18 @@ def as_resource(resp):
 
 
 def as_collection(resp):
+    """Convert a response to a collection of resources.
+
+    Parameters
+    ----------
+    resp : object
+        The objects to convert to resources.
+
+    Returns
+    -------
+    :class:`~flask.Response`
+        The object as a resource collection.
+    """
     return Response(
         json.dumps(resp, sort_keys=True, indent=2, separators=(",", ": ")),
         mimetype="application/x-collection+json; charset=utf-8",
@@ -22,6 +47,18 @@ def as_collection(resp):
 
 
 def jsonify_collection(items):
+    """Convert an iterable to json.
+
+    Parameters
+    ----------
+    items : iterable
+        The items to convert to json.
+
+    Returns
+    -------
+    :class:`~flask.Response`
+        The items converted to json.
+    """
     collection = []
     for item in items:
         collection.append(item.to_resource())
@@ -32,10 +69,38 @@ def jsonify_collection(items):
 
 
 def to_resource(grid, href=None, repr_=None):
+    """Convert a landlab graph to a resource object.
+
+    Parameters
+    ----------
+    grid : :class:`~landlab.grid.base.ModelGrid`
+        A Landlab Graph.
+    href : str, optional
+        Path to the resource.
+    repr_ : str, optional
+        Printable representation of the graph.
+
+    Returns
+    -------
+    dict
+        The object expressed as a resource.
+    """
     return {"_type": "graph", "href": href, "graph": grid_as_dict(grid), "repr": repr_}
 
 
 def grid_as_dict(grid):
+    """Express a Landlab Graph as a Python dict.
+
+    Parameters
+    ----------
+    grid : :class:`~landlab.grid.base.ModelGrid`
+        A Landlab grid.
+
+    Returns
+    -------
+    dict
+        The graph expressed as a Python dictionary.
+    """
     grid.ds.update(
         {
             "corner": grid.corners.reshape(-1),
@@ -50,150 +115,14 @@ def grid_as_dict(grid):
 
 @graphs_page.route("/")
 def show():
-    """Show available graphs.
-    ---
-    definitions:
-        GraphName:
-            type: string
-            enum: ['hex', 'raster', 'radial']
-        GraphNames:
-            type: array
-            items:
-                $ref: '#definitions/GraphName'
-    responses:
-        200:
-            description: A list of all available Landlab graphs.
-            schema:
-              $ref: '#/definitions/GraphNames'
-            examples:
-              ['hex', 'raster', 'radial']
-    """
+    """Show available graphs."""
     graphs = sorted(["hex", "raster", "radial"])
     return jsonify(graphs)
 
 
 @graphs_page.route("/raster")
 def raster():
-    """A 2D RasterGraph.
-    ---
-    parameters:
-        - name: shape
-          in: query
-          type: string
-          required: false
-          default: '3,3'
-        - name: spacing
-          in: query
-          type: string
-          required: false
-          default: '1.0,1.0'
-        - name: origin
-          in: query
-          type: string
-          required: false
-          default: '0.0,0.0'
-
-    definitions:
-        Graph:
-            type: object
-            properties:
-                dims:
-                    $ref: '#/definitions/Dimensions'
-                coords:
-                    $ref: '#/definitions/Coordinates'
-                data_vars:
-                    $ref: '#/definitions/DataVars'
-        DimensionName:
-            type: string
-            enum: ['Two', 'cell', 'corner', 'face', 'link', 'node', 'patch', 'max_cell_faces', 'max_patch_links']
-        DimensionNames:
-            type: array
-            items: ['Two', 'cell', 'corner', 'face', 'link', 'node', 'patch', 'max_cell_faces', 'max_patch_links']
-
-        Dimensions:
-            type: object
-            properties:
-                Two:
-                    type: integer
-                cell:
-                    type: integer
-                corner:
-                    type: integer
-                face:
-                    type: integer
-                link:
-                    type: integer
-                node:
-                    type: integer
-                patch:
-                    type: integer
-                max_cell_faces:
-                    type: integer
-                max_patch_links:
-                    type: integer
-        Coordinates:
-            type: object
-            properties:
-                corner:
-                    $ref: '#/definitions/IntegerData'
-                node:
-                    $ref: '#/definitions/IntegerData'
-        DataVars:
-            type: object
-            properties:
-                corners_at_face:
-                    dims:
-                        type: array
-
-                    $ref: '#/definitions/IntegerData'
-                faces_at_cell:
-                    $ref: '#/definitions/IntegerData'
-                links_at_patch:
-                    $ref: '#/definitions/IntegerData'
-                node_at_cell:
-                    $ref: '#/definitions/IntegerData'
-                nodes_at_face:
-                    $ref: '#/definitions/IntegerData'
-                nodes_at_link:
-                    $ref: '#/definitions/IntegerData'
-                x_of_corner:
-                    $ref: '#/definitions/FloatData'
-                x_of_node:
-                    $ref: '#/definitions/FloatData'
-                y_of_corner:
-                    $ref: '#/definitions/FloatData'
-                y_of_node:
-                    dims: ["node"]
-                    data:
-                        type: array
-                        items: float
-        IntegerData:
-            type: object
-            properties:
-                dims:
-                    type: array
-                    items:
-                        $ref: '#/definitions/DimensionNames'
-                data:
-                    type: array
-                    items: integer
-        FloatData:
-            type: object
-            properties:
-                dims:
-                    type: array
-                    items:
-                        $ref: '#/definitions/DimensionNames'
-                data:
-                    type: array
-                    items: float
-
-    responses:
-        200:
-            description: A raster graph.
-            schema:
-                $ref: '#/definitions/Graph'
-    """
+    """Express a 2D RasterGraph as a resource."""
     args = dict(
         shape=request.args.get("shape", "3,3"),
         spacing=request.args.get("spacing", "1.0,1.0"),
@@ -222,6 +151,7 @@ def raster():
 
 @graphs_page.route("/hex")
 def hex():
+    """Express a 2D HexGraph as a resource."""
     args = dict(
         shape=request.args.get("shape", "4,4"),
         spacing=request.args.get("spacing", "1.0"),
@@ -263,6 +193,7 @@ def hex():
 
 @graphs_page.route("/radial")
 def radial():
+    """Express a 2D RadialGraph as a resource."""
     args = dict(
         shape=request.args.get("shape", "3,4"),
         spacing=request.args.get("spacing", "1.0"),

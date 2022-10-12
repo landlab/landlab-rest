@@ -1,3 +1,4 @@
+"""Create the Flask app for *landlab-rest*."""
 import importlib
 
 from flask import Blueprint, Flask, jsonify, url_for
@@ -5,6 +6,7 @@ from flask_cors import CORS
 
 
 def register_blueprints(app):
+    """Register the *landlab_rest* API."""
     rv = []
 
     for name in ["graphs"]:
@@ -19,6 +21,7 @@ def register_blueprints(app):
 
 
 def create_app():
+    """Create the Flask app."""
     app = Flask(__name__, instance_relative_config=True)
     CORS(app)
 

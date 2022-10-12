@@ -1,3 +1,4 @@
+"""Command line interface for starting the webservice."""
 import click
 
 from .start import start
@@ -12,6 +13,7 @@ from .start import start
 @click.option("--ssl-chain", default=None, help="path to host SSL certificate chain")
 @click.option("--silent", is_flag=True, help="only emit messages on error")
 def main(host, port, ssl_cert, ssl_key, ssl_chain, silent):
+    """Start the landlab-rest webservice."""
     if not silent:
         click.secho(f"🚀 launching landlab sketchbook on {host}:{port}")
     start(host, port, ssl_cert, ssl_key, ssl_chain)
