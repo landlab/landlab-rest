@@ -50,13 +50,150 @@ def grid_as_dict(grid):
 
 @graphs_page.route("/")
 def show():
-    graphs = ["hex", "raster", "radial"]
-    graphs.sort()
+    """Show available graphs.
+    ---
+    definitions:
+        GraphName:
+            type: string
+            enum: ['hex', 'raster', 'radial']
+        GraphNames:
+            type: array
+            items:
+                $ref: '#definitions/GraphName'
+    responses:
+        200:
+            description: A list of all available Landlab graphs.
+            schema:
+              $ref: '#/definitions/GraphNames'
+            examples:
+              ['hex', 'raster', 'radial']
+    """
+    graphs = sorted(["hex", "raster", "radial"])
     return jsonify(graphs)
 
 
 @graphs_page.route("/raster")
 def raster():
+    """A 2D RasterGraph.
+    ---
+    parameters:
+        - name: shape
+          in: query
+          type: string
+          required: false
+          default: '3,3'
+        - name: spacing
+          in: query
+          type: string
+          required: false
+          default: '1.0,1.0'
+        - name: origin
+          in: query
+          type: string
+          required: false
+          default: '0.0,0.0'
+
+    definitions:
+        Graph:
+            type: object
+            properties:
+                dims:
+                    $ref: '#/definitions/Dimensions'
+                coords:
+                    $ref: '#/definitions/Coordinates'
+                data_vars:
+                    $ref: '#/definitions/DataVars'
+        DimensionName:
+            type: string
+            enum: ['Two', 'cell', 'corner', 'face', 'link', 'node', 'patch', 'max_cell_faces', 'max_patch_links']
+        DimensionNames:
+            type: array
+            items: ['Two', 'cell', 'corner', 'face', 'link', 'node', 'patch', 'max_cell_faces', 'max_patch_links']
+
+        Dimensions:
+            type: object
+            properties:
+                Two:
+                    type: integer
+                cell:
+                    type: integer
+                corner:
+                    type: integer
+                face:
+                    type: integer
+                link:
+                    type: integer
+                node:
+                    type: integer
+                patch:
+                    type: integer
+                max_cell_faces:
+                    type: integer
+                max_patch_links:
+                    type: integer
+        Coordinates:
+            type: object
+            properties:
+                corner:
+                    $ref: '#/definitions/IntegerData'
+                node:
+                    $ref: '#/definitions/IntegerData'
+        DataVars:
+            type: object
+            properties:
+                corners_at_face:
+                    dims:
+                        type: array
+
+                    $ref: '#/definitions/IntegerData'
+                faces_at_cell:
+                    $ref: '#/definitions/IntegerData'
+                links_at_patch:
+                    $ref: '#/definitions/IntegerData'
+                node_at_cell:
+                    $ref: '#/definitions/IntegerData'
+                nodes_at_face:
+                    $ref: '#/definitions/IntegerData'
+                nodes_at_link:
+                    $ref: '#/definitions/IntegerData'
+                x_of_corner:
+                    $ref: '#/definitions/FloatData'
+                x_of_node:
+                    $ref: '#/definitions/FloatData'
+                y_of_corner:
+                    $ref: '#/definitions/FloatData'
+                y_of_node:
+                    dims: ["node"]
+                    data:
+                        type: array
+                        items: float
+        IntegerData:
+            type: object
+            properties:
+                dims:
+                    type: array
+                    items:
+                        $ref: '#/definitions/DimensionNames'
+                data:
+                    type: array
+                    items: integer
+        FloatData:
+            type: object
+            properties:
+                dims:
+                    type: array
+                    items:
+                        $ref: '#/definitions/DimensionNames'
+                data:
+                    type: array
+                    items: float
+
+    responses:
+        200:
+            description: A raster graph.
+            schema:
+                $ref: '#/definitions/Graph'
+    """
     args = dict(
         shape=request.args.get("shape", "3,3"),
         spacing=request.args.get("spacing", "1.0,1.0"),

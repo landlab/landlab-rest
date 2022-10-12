@@ -57,7 +57,7 @@ def test_hex_default_origin(client):
 @pytest.mark.parametrize("x0", (-1.0, 1.0, 2.0, 4.0))
 def test_hex_origin(client, x0, y0, orientation, node_layout):
     query = dict(
-        origin="{0},{1}".format(y0, x0),
+        origin=f"{y0},{x0}",
         orientation=orientation,
         node_layout=node_layout,
     )

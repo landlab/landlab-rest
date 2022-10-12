@@ -52,7 +52,7 @@ def test_radial_default_origin(client):
 
 @pytest.mark.parametrize("spacing", (0.5, 1.0, 2.0, 4.0))
 def test_radial_spacing(client, spacing):
-    url = "/graphs/radial?spacing={0}".format(spacing)
+    url = f"/graphs/radial?spacing={spacing}"
     graph = xr.Dataset.from_dict(client.get(url).get_json()["graph"])
     unit = xr.Dataset.from_dict(
         client.get("/graphs/radial?spacing=1.0").get_json()["graph"]
@@ -68,7 +68,7 @@ def test_radial_spacing(client, spacing):
 @pytest.mark.parametrize("y0", (-1.0, 1.0, 2.0, 4.0))
 @pytest.mark.parametrize("x0", (-1.0, 1.0, 2.0, 4.0))
 def test_radial_origin(client, x0, y0):
-    url = "/graphs/radial?origin={0},{1}".format(y0, x0)
+    url = f"/graphs/radial?origin={y0},{x0}"
     graph = xr.Dataset.from_dict(client.get(url).get_json()["graph"])
     centered = xr.Dataset.from_dict(
         client.get("/graphs/radial?origin=0.0,0.0").get_json()["graph"]
