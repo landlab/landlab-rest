@@ -11,10 +11,12 @@ ROOT = pathlib.Path(__file__).parent
 @nox.session
 def test(session: nox.Session) -> None:
     """Run the tests."""
-    session.install("pytest")
-    session.install(".[dev]")
-    session.run("pytest", "--cov=landlab-rest", "-vvv")
-    session.run("coverage", "report", "--ignore-errors", "--show-missing")
+    session.install("-e", ".[dev]")
+
+    args = session.posargs or ["-n", "auto", "--cov", PROJECT, "-vvv"]
+    if "CI" in os.environ:
+        args.append("--cov-report=xml:$(pwd)/coverage.xml")
+    session.run("pytest", *args)
     # "--fail-under=100",
 
 
@@ -26,11 +28,17 @@ def test_cli(session: nox.Session) -> None:
     session.run("start-sketchbook", "--version")
 
 
-@nox.session
+@nox.session(reuse_venv=True)
 def lint(session: nox.Session) -> None:
     """Look for lint."""
     session.install("pre-commit")
-    session.run("pre-commit", "run", "--all-files")
+
+    args = list(session.posargs)
+    args.append("--all-files")
+    if "CI" in os.environ:
+        args.append("--show-diff-on-failure")
+
+    session.run("pre-commit", "run", *args)
 
     # towncrier(session)
 
