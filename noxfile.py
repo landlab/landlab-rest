@@ -53,17 +53,29 @@ def towncrier(session: nox.Session) -> None:
 @nox.session(name="build-docs", reuse_venv=True)
 def build_docs(session: nox.Session) -> None:
     """Build the docs."""
-    session.install(".[docs]")
+    with session.chdir(ROOT):
+        session.install(".[docs]")
 
     clean_docs(session)
-    session.run(
-        "sphinx-build",
-        "-b",
-        "html",
-        "-W",
-        str(ROOT / "docs/source"),
-        str(ROOT / "docs/build/html"),
-    )
+
+    with session.chdir(ROOT):
+        session.run(
+            "sphinx-apidoc",
+            "-e",
+            "-force",
+            "--no-toc",
+            "-o",
+            "docs/source/api",
+            "landlab_rest",
+        )
+        session.run(
+            "sphinx-build",
+            "-b",
+            "html",
+            "-W",
+            "docs/source",
+            "docs/build/html",
+        )
 
 
 @nox.session(name="live-docs", reuse_venv=True)
@@ -164,9 +176,12 @@ def clean_checkpoints(session):
 @nox.session(python=False, name="clean-docs")
 def clean_docs(session: nox.Session) -> None:
     """Clean up the docs folder."""
-    session.chdir(ROOT / "docs")
-    if os.path.exists("build"):
-        shutil.rmtree("build")
+    with session.chdir(ROOT / "docs"):
+        if os.path.exists("build"):
+            shutil.rmtree("build")
+
+        for p in pathlib.Path("source/api").rglob("landlab_rest*.rst"):
+            p.unlink()
 
 
 @nox.session(python=False, name="clean-ext")
