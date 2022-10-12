@@ -60,6 +60,7 @@ dev = [
   "pre-commit",
   "pytest",
   "pytest-cov",
+  "pytest-xdist",
   "towncrier",
   "zest.releaser[recommended]",
 ]
