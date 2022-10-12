@@ -188,6 +188,7 @@ htmlhelp_basename = "landlab_restdoc"
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
+    "flask": ("https://flask.palletsprojects.com/en/2.2.x/", None),
     "landlab": ("https://landlab.readthedocs.io/en/master/", None),
 }
 
