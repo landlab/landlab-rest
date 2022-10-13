@@ -1,20 +1,26 @@
-.. landlab_rest documentation master file, created by
-   sphinx-quickstart on Wed Apr 17 14:11:40 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+============
+landlab REST
+============
 
-Welcome to landlab_rest's documentation!
-========================================
+.. include:: ../../README.rst
+  :start-after: .. start-intro
+  :end-before: .. end-intro
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+  :maxdepth: 1
+  :hidden:
 
+  quickstart
+  starting
+  requests
 
+.. toctree::
+  :caption: Development
+  :maxdepth: 1
+  :hidden:
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+  contributing/index
+  Reference <api/index>
+  changes
+  Contributors <authors>
+  License <license>

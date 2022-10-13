@@ -7,7 +7,7 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal
 @pytest.mark.parametrize("graph_type", ("hex", "radial", "raster"))
 def test_graph_data(client, graph_type):
     graph = xr.Dataset.from_dict(
-        client.get("/graphs/{0}".format(graph_type)).get_json()["graph"]
+        client.get(f"/graphs/{graph_type}").get_json()["graph"]
     )
 
     assert set(graph.dims) == {
@@ -113,7 +113,7 @@ def test_raster_default_origin(client):
 @pytest.mark.parametrize("n_cols", (4, 8, 16, 32))
 @pytest.mark.parametrize("n_rows", (4, 8, 16, 32))
 def test_raster_shape(client, n_rows, n_cols):
-    url = "/graphs/raster?shape={0},{1}".format(n_rows, n_cols)
+    url = f"/graphs/raster?shape={n_rows},{n_cols}"
     graph = xr.Dataset.from_dict(client.get(url).get_json()["graph"])
     assert graph.dims["node"] == n_rows * n_cols
 
@@ -121,7 +121,7 @@ def test_raster_shape(client, n_rows, n_cols):
 @pytest.mark.parametrize("dy", (1.0, 2.0, 4.0))
 @pytest.mark.parametrize("dx", (1.0, 2.0, 4.0))
 def test_raster_spacing(client, dx, dy):
-    url = "/graphs/raster?spacing={0},{1}".format(dy, dx)
+    url = f"/graphs/raster?spacing={dy},{dx}"
     graph = xr.Dataset.from_dict(client.get(url).get_json()["graph"])
 
     expected_x, expected_y = np.meshgrid([0.0, 1.0, 2.0], [0.0, 1.0, 2.0])
@@ -133,7 +133,7 @@ def test_raster_spacing(client, dx, dy):
 @pytest.mark.parametrize("y0", (-1.0, 1.0, 2.0, 4.0))
 @pytest.mark.parametrize("x0", (-1.0, 1.0, 2.0, 4.0))
 def test_raster_origin(client, x0, y0):
-    url = "/graphs/raster?origin={0},{1}".format(y0, x0)
+    url = f"/graphs/raster?origin={y0},{x0}"
     graph = xr.Dataset.from_dict(client.get(url).get_json()["graph"])
 
     expected_x, expected_y = np.meshgrid([0.0, 1.0, 2.0], [0.0, 1.0, 2.0])

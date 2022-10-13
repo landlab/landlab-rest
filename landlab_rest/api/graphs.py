@@ -1,3 +1,4 @@
+"""Define the API for /graphs/{graph}."""
 import json
 import urllib
 
@@ -8,6 +9,18 @@ graphs_page = Blueprint("graphs", __name__)
 
 
 def as_resource(resp):
+    """Convert a response to a resource.
+
+    Parameters
+    ----------
+    resp : object
+        The object to convert to a resource.
+
+    Returns
+    -------
+    :class:`~flask.Response`
+        The object as a resource.
+    """
     return Response(
         json.dumps(resp, sort_keys=True, indent=2, separators=(",", ": ")),
         mimetype="application/x-resource+json; charset=utf-8",
@@ -15,6 +28,18 @@ def as_resource(resp):
 
 
 def as_collection(resp):
+    """Convert a response to a collection of resources.
+
+    Parameters
+    ----------
+    resp : object
+        The objects to convert to resources.
+
+    Returns
+    -------
+    :class:`~flask.Response`
+        The object as a resource collection.
+    """
     return Response(
         json.dumps(resp, sort_keys=True, indent=2, separators=(",", ": ")),
         mimetype="application/x-collection+json; charset=utf-8",
@@ -22,6 +47,18 @@ def as_collection(resp):
 
 
 def jsonify_collection(items):
+    """Convert an iterable to json.
+
+    Parameters
+    ----------
+    items : iterable
+        The items to convert to json.
+
+    Returns
+    -------
+    :class:`~flask.Response`
+        The items converted to json.
+    """
     collection = []
     for item in items:
         collection.append(item.to_resource())
@@ -32,10 +69,38 @@ def jsonify_collection(items):
 
 
 def to_resource(grid, href=None, repr_=None):
+    """Convert a landlab graph to a resource object.
+
+    Parameters
+    ----------
+    grid : :class:`~landlab.grid.base.ModelGrid`
+        A Landlab Graph.
+    href : str, optional
+        Path to the resource.
+    repr_ : str, optional
+        Printable representation of the graph.
+
+    Returns
+    -------
+    dict
+        The object expressed as a resource.
+    """
     return {"_type": "graph", "href": href, "graph": grid_as_dict(grid), "repr": repr_}
 
 
 def grid_as_dict(grid):
+    """Express a Landlab Graph as a Python dict.
+
+    Parameters
+    ----------
+    grid : :class:`~landlab.grid.base.ModelGrid`
+        A Landlab grid.
+
+    Returns
+    -------
+    dict
+        The graph expressed as a Python dictionary.
+    """
     grid.ds.update(
         {
             "corner": grid.corners.reshape(-1),
@@ -50,13 +115,14 @@ def grid_as_dict(grid):
 
 @graphs_page.route("/")
 def show():
-    graphs = ["hex", "raster", "radial"]
-    graphs.sort()
+    """Show available graphs."""
+    graphs = sorted(["hex", "raster", "radial"])
     return jsonify(graphs)
 
 
 @graphs_page.route("/raster")
 def raster():
+    """Express a 2D RasterGraph as a resource."""
     args = dict(
         shape=request.args.get("shape", "3,3"),
         spacing=request.args.get("spacing", "1.0,1.0"),
@@ -85,6 +151,7 @@ def raster():
 
 @graphs_page.route("/hex")
 def hex():
+    """Express a 2D HexGraph as a resource."""
     args = dict(
         shape=request.args.get("shape", "4,4"),
         spacing=request.args.get("spacing", "1.0"),
@@ -126,6 +193,7 @@ def hex():
 
 @graphs_page.route("/radial")
 def radial():
+    """Express a 2D RadialGraph as a resource."""
     args = dict(
         shape=request.args.get("shape", "3,4"),
         spacing=request.args.get("spacing", "1.0"),

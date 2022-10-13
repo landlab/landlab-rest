@@ -1,0 +1,14 @@
+# Requirements extracted from pyproject.toml
+# [project.optional-dependencies] dev
+black
+coveralls
+flake8
+flake8-bugbear
+isort
+nox
+pre-commit
+pytest
+pytest-cov
+pytest-xdist
+towncrier
+zest.releaser[recommended]

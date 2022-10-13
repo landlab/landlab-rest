@@ -1,11 +1,13 @@
+"""Start the application."""
 import cherrypy
+
 from landlab_rest import create_app
 
 app = create_app()
 
 
 def start(host, port, ssl_cert, ssl_key, ssl_chain):
-
+    """Start the web application."""
     # Mount the application
     cherrypy.tree.graft(app, "/")
 

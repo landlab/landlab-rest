@@ -31,7 +31,7 @@ classifiers = [
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: Implementation :: CPython",
-  "Topic :: Scientific/Engineering :: Physics",  
+  "Topic :: Scientific/Engineering :: Physics",
 ]
 requires-python = ">=3.8"
 dependencies = [
@@ -56,11 +56,21 @@ dev = [
   "flake8",
   "flake8-bugbear",
   "isort",
+  "nox",
   "pre-commit",
   "pytest",
   "pytest-cov",
+  "pytest-xdist",
   "towncrier",
   "zest.releaser[recommended]",
+]
+docs = [
+  "sphinx>=4",
+  "furo",
+  "sphinxcontrib.towncrier",
+  "sphinx-copybutton",
+  "sphinx-inline-tabs",
+  "towncrier",
 ]
 
 [project.scripts]
