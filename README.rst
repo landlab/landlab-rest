@@ -1,3 +1,6 @@
+.. image:: https://readthedocs.org/projects/landlab-rest/badge/?version=latest
+    :target: https://landlab-rest.readthedocs.org
+
 .. image:: https://github.com/landlab/landlab-rest/actions/workflows/test.yml/badge.svg
     :target: https://github.com/landlab/landlab-rest/actions/workflows/test.yml
 
@@ -6,6 +9,9 @@
 
 .. image:: https://github.com/landlab/landlab-rest/actions/workflows/black.yml/badge.svg
     :target: https://github.com/landlab/landlab-rest/actions/workflows/black.yml
+
+.. image:: https://github.com/landlab/landlab-rest/actions/workflows/docs.yml/badge.svg
+    :target: https://github.com/landlab/landlab-rest/actions/workflows/docs.yml
 
 landlab REST
 ============
