@@ -30,6 +30,8 @@ Currently available grid types include :class:`~landlab.grid.raster.RasterModelG
 
 .. end-intro
 
+For more information, visit `landlab-rest's documentation <https://landlab-rest.readthedocs.org>`_.
+
 Quickstart
 ----------
 
